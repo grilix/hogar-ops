@@ -1,0 +1,25 @@
+# TODO:
+# - name: Fuentes configuradas
+#   become: true
+#   template:
+#     src: 'sources.list'
+#     dest: '/etc/apt/sources.list'
+#   register: config
+#   when: ansible_distribution == 'Debian'
+
+- name: Paquetes instalados
+  become: true
+  apt:
+    pkg:
+      - git
+      - vim
+      - tmux
+      - nextcloud-desktop
+      - golang
+      - docker-compose
+
+- include: ssh.yml
+- include: git.yml
+- include: tmux.yml
+- include: vim.yml
+- include: flatpak.yml

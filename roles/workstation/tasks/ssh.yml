@@ -1,0 +1,26 @@
+- name: ssh | el usuario tiene una clave privada
+  community.crypto.openssh_keypair:
+    path: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+    size: "4096"
+    type: "rsa"
+    regenerate: fail
+
+- name: ssh | borrar MOTD estático
+  file:
+    path: '/etc/motd'
+    state: absent
+  become: yes
+
+- name: ssh | template de MOTD insertado
+  template:
+    src: "98-info.j2"
+    dest: "/etc/update-motd.d/98-info"
+    mode: "u=rxw,go=rx"
+  become: yes
+
+- name: ssh | mensaje de último login desactivado
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    line: "PrintLastLog no"
+    regexp: 'PrintLastLog '
+  become: yes

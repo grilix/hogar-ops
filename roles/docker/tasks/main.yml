@@ -1,0 +1,23 @@
+---
+- name: docker instalado
+  become: true
+  apt:
+    name:
+      - docker
+      - docker-compose
+    state: present
+  notify: docker iniciado al arrancar
+
+- name: grupo para docker creado
+  become: true
+  group:
+    name: "{{ docker_group }}"
+    state: present
+
+- name: usuario agregado al grupo de docker
+  become: true
+  user:
+    name: "{{ ansible_user }}"
+    groups:
+      - "{{ docker_group }}"
+    append: yes

@@ -1,0 +1,37 @@
+- name: tmux | archivo de configuración existe
+  stat:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+  register: tmux_conf
+
+- name: tmux | directorio de configuración existe
+  file:
+    path: "{{ ansible_env.HOME }}/.tmux"
+    state: directory
+  when: not tmux_conf.stat.exists
+
+- name: tmux | archivo de configuración creado
+  file:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    state: touch
+  when: not tmux_conf.stat.exists
+
+- name: tmux | colores configurados
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    line: source-file "$DOTFILES_PATH/tmux/tmux.colors.conf"
+
+- name: tmux | configuración vinculada
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    line: source-file "$DOTFILES_PATH/tmux/tmux.conf"
+
+- name: tmux | manejador de plugins activado
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    line: run "$DOTFILES_PATH/tmux/tpm/tpm"
+  notify: tmux | plugins instalados
+
+- name: tmux | configuración extra para bash vinculada
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: source "$DOTFILES_PATH/tmux/bashrc"

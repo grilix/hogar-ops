@@ -1,0 +1,36 @@
+---
+# Esto medio que es algo que estuve probando. El proxy-manager corre
+# en una raspberry pi, y es el encargado de routear peticiones
+# desde internet sólo a aplicaciones específicas (el resto de las
+# aplicaciones sólo funcionan dentro de la red).
+#
+# Hasta ahora, no tengo mucha idea de cómo quiero que quede, ni
+# de si es la solución que necesito, así que está un poco a medias.
+
+- name: pip instalado
+  become: true
+  apt:
+    name:
+      - python-pip
+      - python-setuptools
+      - python-backports.ssl-match-hostname
+    state: present
+
+- name: container iniciado
+  docker_container:
+    name: proxy-manager
+    state: started
+    image: jc21/nginx-proxy-manager:2.8.1
+    ports:
+      - 81:81
+      - 80:80
+      - 443:443
+    env:
+      DB_MYSQL_HOST: "{{ mysql_host }}"
+      DB_MYSQL_PORT: "31306"
+      DB_MYSQL_USER: "{{ mysql_user }}"
+      DB_MYSQL_PASSWORD: "{{ mysql_password }}"
+      DB_MYSQL_NAME: "{{ mysql_db_name }}"
+    volumes:
+      - /data
+      - /letsencrypt

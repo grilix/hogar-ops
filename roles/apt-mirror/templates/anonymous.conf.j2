@@ -1,0 +1,12 @@
+<Anonymous ~ftp>
+   User              ftp
+   Group             nogroup
+   UserAlias         anonymous ftp
+   RequireValidShell off
+   # MaxClients        4
+   <Directory *>
+     <Limit WRITE>
+       DenyAll
+     </Limit>
+   </Directory>
+ </Anonymous>

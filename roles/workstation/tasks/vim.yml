@@ -1,0 +1,26 @@
+- name: vim | repositorio de Vundle clonado
+  git:
+    repo: "https://github.com/gmarik/Vundle.vim.git"
+    dest: "{{ ansible_env.HOME }}/.vim/bundle/Vundle.vim"
+    update: no
+
+- name: vim | archivo de configuración existe
+  stat:
+    path: "{{ ansible_env.HOME }}/.vim/vimrc"
+  register: vim_conf
+
+- name: vim | archivo de configuración creado
+  file:
+    path: "{{ ansible_env.HOME }}/.vim/vimrc"
+    state: touch
+  when: not vim_conf.stat.exists
+
+- name: vim | configuración vinculada
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.vim/vimrc"
+    line: "source {{ dotfiles_dest_path }}/vim/vimrc"
+  register: vimrc
+
+- name: vim | configuración inicial establecida
+  command: 'vim -e -c "set more" -S "{{ dotfiles_dest_path }}/vim/bootstrap.vim"'
+  when: vimrc.changed

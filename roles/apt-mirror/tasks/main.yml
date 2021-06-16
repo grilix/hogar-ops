@@ -1,0 +1,65 @@
+---
+- name: paquetes instalados
+  become: true
+  apt:
+    pkg:
+      - apt-mirror
+      - proftpd-basic
+
+- name: directorio destino existe
+  become: true
+  file:
+    path: "{{ apt_mirror_path }}"
+    state: directory
+
+- name: fuentes de paquetes configuradas
+  become: true
+  template:
+    src: 'mirror.list.j2'
+    dest: '/etc/apt/mirror.list'
+
+#
+# No sé qué onda con esto, descargar los paquetes puede llevar horas, capaz que
+# podemos simplemente no correr este comando, y esperar a que corra el cron. El
+# comando puede correrse a mano una vez terminada la configuración, no sé.
+#
+# - name: 'Descargar repositorio ... (va a llevar tiempo)'
+#   become: true
+#   command: 'apt-mirror'
+
+- name: directorio para ftp existe
+  become: true
+  file:
+    path: '/srv/ftp/debian'
+    state: directory
+
+- name: montaje para directorio de ftp configurado
+  become: true
+  lineinfile:
+    path: '/etc/fstab'
+    line: "{{ apt_mirror_path }}/mirror/ftp.us.debian.org /srv/ftp/debian none defaults,bind"
+    regexp: ' /srv/ftp/debian none'
+  notify: directorio de ftp montado
+
+- name: configuración ftp aplicada
+  become: true
+  template:
+    src: 'anonymous.conf.j2'
+    dest: '/etc/proftpd/conf.d/anonymous.conf'
+  notify: servidor ftp reiniciado
+
+- name: servicio de actualización instalado
+  become: true
+  template:
+    src: units/update-apt-mirror.service.j2
+    dest: /etc/systemd/system/update-apt-mirror.service
+  notify: servicios recargados
+
+- name: actualizador automático instalado
+  become: true
+  template:
+    src: units/update-apt-mirror.timer.j2
+    dest: /etc/systemd/system/update-apt-mirror.timer
+  notify:
+    - servicios recargados
+    - actualizador automático recargado

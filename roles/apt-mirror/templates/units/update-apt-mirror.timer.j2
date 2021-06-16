@@ -1,0 +1,10 @@
+[Unit]
+Description=apt-mirror update service
+
+[Timer]
+OnCalendar=daily
+AccuracySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

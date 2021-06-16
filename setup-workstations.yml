@@ -1,0 +1,9 @@
+---
+- name: Configurar estaciones de trabajo
+  hosts: workstations
+  vars:
+    dotfiles_repo: "https://github.com/grilix/dotfiles.git"
+    dotfiles_dest_path: "{{ ansible_env.HOME }}/Source/dotfiles"
+  roles:
+    - docker
+    - workstation

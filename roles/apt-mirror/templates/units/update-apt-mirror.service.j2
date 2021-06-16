@@ -1,0 +1,7 @@
+[Unit]
+Description=apt-mirror update service
+
+[Service]
+Type=oneshot
+WorkingDirectory={{ apt_mirror_path  }}
+ExecStart=/usr/bin/apt-mirror

@@ -1,0 +1,35 @@
+- name:  "git | editor configurado"
+  git_config:
+    name: 'core.editor'
+    value: 'vim -n +1'
+    scope: global
+
+- name:  "git | modo de push configurado"
+  git_config:
+    name: push.default
+    value: simple
+    scope: global
+
+- name:  "git | modo de pull configurado"
+  git_config:
+    name: pull.ff
+    value: only
+    scope: global
+
+- name:  "git | colores activados"
+  git_config:
+    name: color.ui
+    value: 'true'
+    scope: global
+
+- name:  "git | nombre configurado"
+  git_config:
+    name: user.name
+    value: "{{ target_user_name }}"
+    scope: global
+
+- name:  "git | email configurado"
+  git_config:
+    name: user.email
+    value: "{{ target_user_email }}"
+    scope: global

@@ -1,0 +1,27 @@
+---
+- name: servicios recargados
+  become: true
+  systemd:
+    daemon_reload: true
+
+- name: actualizador automático activado
+  become: true
+  systemd:
+    enabled: true
+    state: started
+    name: update-apt-mirror.timer
+
+- name: directorio de ftp montado
+  become: true
+  mount:
+    path: '/srv/ftp/debian'
+    src: "{{ apt_mirror_path }}/mirror/ftp.us.debian.org/debian"
+    state: mounted
+    opts: bind
+    fstype: none
+
+- name: servidor ftp reiniciado
+  become: true
+  systemd:
+    name: proftpd.service
+    state: restarted

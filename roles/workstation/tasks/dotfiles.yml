@@ -1,0 +1,21 @@
+- name: dotfiles | repositorio clonado
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_dest_path }}"
+    update: no
+
+- name: dotfiles | ruta configurada
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: export DOTFILES_PATH="{{ dotfiles_dest_path }}"
+    regexp: 'export DOTFILES_PATH='
+
+- name: dotfiles | bashrc configurado
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: source "$DOTFILES_PATH/bash/bashrc"
+
+- name: dotfiles | scripts configurados
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: source "$DOTFILES_PATH/scripts/bashrc"

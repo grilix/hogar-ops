@@ -1,0 +1,12 @@
+- name: flatpak | paquete principal instalado
+  become: true
+  apt:
+    pkg:
+      - flatpak
+
+- name: flatpak | repositorio agregado
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: user
