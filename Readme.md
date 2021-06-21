@@ -64,3 +64,12 @@ Con el inventario en la mano, le das al playbook que quieras:
 ```bash
 ansible-playbook --ask-become-pass -i inventory/casa.yml setup-apt-mirror.yml
 ```
+
+# Vagrant
+
+El inventario `inventory/vagrant.yml` contiene los datos para correr playbooks en la máquina
+virtual, una vez generada por Vagrant con `vagrant up`.
+
+```bash
+ansible-playbook -i inventory/vagrant.yml setup-apt-mirror.yml
+```

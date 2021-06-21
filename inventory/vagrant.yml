@@ -1,0 +1,22 @@
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: 'vagrant'
+    ansible_ssh_private_key_file: '.vagrant/machines/default/virtualbox/private_key'
+  hosts:
+    vagrant:
+      ansible_host: "192.168.34.10"
+  children:
+    k3s_master:
+      hosts:
+        vagrant:
+          cluster_name: "hogarlab-vagrant"
+      vars:
+        client_user: grilix
+    k3s_cluster:
+      children:
+        k3s_master:
+      vars:
+        systemd_dir: /etc/systemd/system
+        local_storage_path: /srv
+        k3s_version: v1.21.0+k3s1
