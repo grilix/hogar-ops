@@ -1,0 +1,6 @@
+[submodule "roles/k3s-access"]
+	path = roles/k3s-access
+	url = git@github.com:grilix/k3s-access.git
+[submodule "roles/k3s-ansible"]
+	path = roles/k3s-ansible
+	url = git@github.com:grilix/k3s-ansible.git

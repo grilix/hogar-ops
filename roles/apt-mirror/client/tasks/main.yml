@@ -1,0 +1,8 @@
+# TODO: al final me distraje con otras cosas y no hice esto
+# - name: Fuentes configuradas
+#   become: true
+#   template:
+#     src: 'sources.list'
+#     dest: '/etc/apt/sources.list'
+#   register: config
+#   when: ansible_distribution == 'Debian'

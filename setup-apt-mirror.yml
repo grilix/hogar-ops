@@ -2,4 +2,4 @@
 - name: Configurar apt mirror
   hosts: apt_mirror
   roles:
-    - apt-mirror
+    - apt-mirror/server
