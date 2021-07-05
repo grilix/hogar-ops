@@ -37,7 +37,7 @@
   become: true
   lineinfile:
     path: '/etc/fstab'
-    line: "{{ apt_mirror_path }}/mirror/ftp.us.debian.org /srv/ftp/debian none defaults,bind"
+    line: "{{ apt_mirror_path }}/mirror/ftp.us.debian.org/debian /srv/ftp/debian none defaults,bind"
     regexp: ' /srv/ftp/debian none'
   notify: directorio de ftp montado
 
