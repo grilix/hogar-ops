@@ -1,3 +1,11 @@
+# TODO: para el tema de los colores:
+#    curl -LO http://invisible-island.net/datafiles/current/terminfo.src.gz
+#    gunzip terminfo.src.gz
+#    tic -x terminfo.src
+#
+# Más info: /usr/share/terminfo/**/*
+#
+
 - name: tmux | archivo de configuración existe
   stat:
     path: "{{ ansible_env.HOME }}/.tmux.conf"

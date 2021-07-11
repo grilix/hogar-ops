@@ -1,8 +1,21 @@
-# TODO: al final me distraje con otras cosas y no hice esto
-# - name: Fuentes configuradas
-#   become: true
-#   template:
-#     src: 'sources.list'
-#     dest: '/etc/apt/sources.list'
-#   register: config
-#   when: ansible_distribution == 'Debian'
+- name: fuentes configuradas
+  become: true
+  template:
+    src: 'sources.list.j2'
+    dest: '/etc/apt/sources.list'
+
+# Debian deprecó la historia de los ftps y no
+# le pinta nada que lo usemos. Eventualmente
+# actualizaré esto para que use http o lo que
+# sea.
+- name: ftp activado
+  become: true
+  template:
+    src: '99-enable-ftp'
+    dest: '/etc/apt/apt.conf.d/99-enable-ftp'
+
+- name: fuentes actualizadas
+  become: true
+  apt:
+    name: "*"
+    update_cache: yes

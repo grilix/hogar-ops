@@ -3,6 +3,8 @@
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest_path }}"
     update: no
+  notify:
+    - "tmux | plugins instalados"
 
 - name: dotfiles | ruta configurada
   lineinfile:

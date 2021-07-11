@@ -1,0 +1,5 @@
+---
+- name: Configurar conexiones a apt-mirror
+  hosts: mirror_clients
+  roles:
+    - apt-mirror/client

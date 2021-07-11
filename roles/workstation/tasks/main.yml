@@ -18,6 +18,7 @@
       - golang
       - docker-compose
 
+- include: dotfiles.yml
 - include: ssh.yml
 - include: git.yml
 - include: tmux.yml

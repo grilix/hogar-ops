@@ -1,5 +1,5 @@
 ---
-- hosts: k3s_cluster
+- hosts: k3s_master
   roles:
     - k3s-ansible/roles/prereq
     - k3s-ansible/roles/download
@@ -12,14 +12,11 @@
   become: true
   tasks:
     - apt:
-        name: open-iscsi
-        state: present
+        name:
+          # Para longhorn
+          - open-iscsi
 
 - hosts: k3s_master
   roles:
     - k3s-ansible/roles/k3s/master
     - k3s-access
-
-# - hosts: k3s_nodes
-#   roles:
-#     - k3s-ansible/roles/k3s/node
