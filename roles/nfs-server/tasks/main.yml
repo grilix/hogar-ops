@@ -1,0 +1,66 @@
+---
+- name: paquetes instalados
+  become: true
+  apt:
+    pkg:
+      - nfs-kernel-server
+
+- name: directorio de medios existe
+  become: true
+  file:
+    path: "{{ nfs_server_path }}/media"
+    state: directory
+
+- name: directorio de medios montado
+  become: true
+  mount:
+    path: '{{ nfs_server_path }}/media'
+    src: "UUID={{ nfs_media_device_uuid }}"
+    state: mounted
+    opts: noatime,norelatime,nodiratime,nodev,noexec
+    fstype: ext4
+
+- name: directorio montado tiene los permisos correctos
+  become: true
+  file:
+    path: "{{ nfs_server_path }}/media"
+    mode: 0774
+    owner: nobody
+    group: nogroup
+    state: directory
+
+- name: directorio de medios tiene permisos correctos
+  become: true
+  acl:
+    state: present
+    path: '{{ nfs_server_path }}/media'
+    default: true
+    etype: user
+    permissions: "rwX"
+
+- name: directorio de medios tiene permisos correctos
+  become: true
+  acl:
+    state: present
+    path: '{{ nfs_server_path }}/media'
+    default: true
+    etype: group
+    permissions: "rwX"
+
+- name: directorio de medios tiene permisos correctos
+  become: true
+  acl:
+    state: present
+    path: '{{ nfs_server_path }}/media'
+    default: true
+    etype: other
+    permissions: "rx"
+
+- name: directorio de medios exportado
+  become: true
+  lineinfile:
+    path: '/etc/exports'
+    line: "{{ nfs_server_path }}/media {{ nfs_media_shares }}"
+    regexp: "^{{ nfs_server_path }}/media "
+  notify:
+    - servidor nfs reiniciado

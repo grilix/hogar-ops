@@ -38,6 +38,13 @@ all:
     apt_mirror:
       hosts:
         swarm:
+    nfs_servers:
+      hosts:
+        swarm:
+          nfs_media_device_uuid: "d768526f-cf0f-4ab6-a2fa-18deb765d5e4"
+          nfs_media_shares: >
+            host(rw,mp,subtree_check,sync,all_squash)
+            otro-host(rw,mp,subtree_check,sync,all_squash)
     pi:
       hosts:
         proxy:
