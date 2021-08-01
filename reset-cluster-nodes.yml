@@ -1,0 +1,4 @@
+---
+- hosts: []
+  roles:
+    - k3s-ansible/roles/reset
