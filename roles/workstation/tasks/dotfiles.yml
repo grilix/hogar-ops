@@ -2,20 +2,25 @@
   git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest_path }}"
-    update: no
+    update: yes
   notify:
     - "tmux | plugins instalados"
 
 - name: dotfiles | ruta configurada
   lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
-    line: export DOTFILES_PATH="{{ dotfiles_dest_path }}"
+    line: 'export DOTFILES_PATH="{{ dotfiles_dest_path }}"'
     regexp: 'export DOTFILES_PATH='
 
 - name: dotfiles | bashrc configurado
   lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
     line: source "$DOTFILES_PATH/bash/bashrc"
+
+- name: dotfiles | golang configurado
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: source "$DOTFILES_PATH/go/bashrc"
 
 - name: dotfiles | scripts configurados
   lineinfile:
