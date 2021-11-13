@@ -3,64 +3,65 @@
   become: true
   apt:
     pkg:
+      - acl
       - nfs-kernel-server
 
-- name: directorio de medios existe
+- name: directorio existe
   become: true
   file:
-    path: "{{ nfs_server_path }}/media"
+    path: "{{ nfs_server_path }}"
     state: directory
 
-- name: directorio de medios montado
+- name: directorio montado
   become: true
   mount:
-    path: '{{ nfs_server_path }}/media'
-    src: "UUID={{ nfs_media_device_uuid }}"
+    path: '{{ nfs_server_path }}'
+    src: "UUID={{ nfs_filesystem_uuid }}"
     state: mounted
-    opts: noatime,norelatime,nodiratime,nodev,noexec
+    opts: doatime,norelatime,nodiratime,nodev,noexec
     fstype: ext4
 
 - name: directorio montado tiene los permisos correctos
   become: true
   file:
-    path: "{{ nfs_server_path }}/media"
+    path: "{{ nfs_server_path }}"
     mode: 0774
     owner: nobody
     group: nogroup
     state: directory
 
-- name: directorio de medios tiene permisos correctos
+- name: ACL | configuración de usuario
   become: true
   acl:
     state: present
-    path: '{{ nfs_server_path }}/media'
+    path: '{{ nfs_server_path }}'
     default: true
     etype: user
     permissions: "rwX"
 
-- name: directorio de medios tiene permisos correctos
+- name: ACL | configuración de grupo
   become: true
   acl:
     state: present
-    path: '{{ nfs_server_path }}/media'
+    path: '{{ nfs_server_path }}'
     default: true
     etype: group
     permissions: "rwX"
 
-- name: directorio de medios tiene permisos correctos
+- name: ACL | configuración para otros
   become: true
   acl:
     state: present
-    path: '{{ nfs_server_path }}/media'
+    path: '{{ nfs_server_path }}'
     default: true
     etype: other
     permissions: "rx"
 
-- name: directorio de medios exportado
+- name: directorio exportado
   become: true
   lineinfile:
     path: '/etc/exports'
-    line: "{{ nfs_server_path }}/media {{ nfs_media_shares }}"
-    regexp: "^{{ nfs_server_path }}/media "
+    line: "{{ nfs_server_path }} {{ nfs_export_settings }}"
+    regexp: "^{{ nfs_server_path }} "
   notify:
     - servidor nfs reiniciado

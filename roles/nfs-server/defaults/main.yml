@@ -1,2 +1,5 @@
+---
 nfs_server_path: /srv/nfs
-nfs_media_device_uuid: ""
+nfs_filesystem_uuid: ""
+nfs_export_settings: >
+  10.0.0.0/8(rw,mp,subtree_check,sync,all_squash)
