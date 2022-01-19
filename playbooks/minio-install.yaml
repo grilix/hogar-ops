@@ -1,0 +1,39 @@
+---
+- hosts: minio_servers
+  vars:
+    systemd_dir: /etc/systemd/system
+  tasks:
+    - name: Descargar minio
+      shell: |
+        wget \
+          https://dl.min.io/server/minio/release/linux-amd64/minio \
+          -O /usr/bin/minio
+          chmod +x /usr/bin/minio
+      args:
+        creates: /usr/bin/minio
+
+    - name: Archivo de entorno
+      become: true
+      template:
+        src: "minio.env.j2"
+        dest: "/var/lib/minio/.env"
+        owner: root
+        group: root
+        mode: 0400
+
+    - name: Copiar servicio
+      become: true
+      template:
+        src: "minio.service.j2"
+        dest: "{{ systemd_dir }}/minio.service"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Activar/reiniciar el servicio
+      become: true
+      systemd:
+        name: minio.service
+        daemon_reload: true
+        state: restarted
+        enabled: true

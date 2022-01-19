@@ -1,0 +1,17 @@
+[Unit]
+Description=Minio server
+Documentation=https://docs.min.io/docs/minio-quickstart-guide.html
+After=network-online.target
+
+[Service]
+WorkingDirectory=/var/lib/minio
+ExecStart=/usr/bin/minio \
+    server \
+    --console-address '127.0.0.1:9001' \
+    /var/lib/minio/data
+Restart=always
+RestartSec=20s
+EnvironmentFile=/var/lib/minio/.env
+
+[Install]
+WantedBy=multi-user.target

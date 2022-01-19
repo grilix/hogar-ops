@@ -1,0 +1,19 @@
+---
+
+- hosts: k3s_server
+  tasks:
+    - name: Activar el servicio
+      become: true
+      systemd:
+        name: k3s
+        state: started
+        enabled: true
+
+- hosts: k3s_agents
+  tasks:
+    - name: Activar el servicio
+      become: true
+      systemd:
+        name: k3s-node
+        state: started
+        enabled: true
