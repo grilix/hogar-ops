@@ -2,6 +2,7 @@
 Description=Minio server
 Documentation=https://docs.min.io/docs/minio-quickstart-guide.html
 After=network-online.target
+ConditionPathExists=/var/lib/minio/env
 
 [Service]
 WorkingDirectory=/var/lib/minio
@@ -9,7 +10,7 @@ ExecStart=/usr/bin/minio \
     server \
     --console-address '127.0.0.1:9001' \
     /var/lib/minio/data
-Restart=always
+Restart=on-failure
 RestartSec=20s
 EnvironmentFile=/var/lib/minio/.env
 

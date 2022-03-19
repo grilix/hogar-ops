@@ -7,6 +7,7 @@
 #   register: config
 #   when: ansible_distribution == 'Debian'
 
+---
 - name: Paquetes instalados
   become: true
   apt:

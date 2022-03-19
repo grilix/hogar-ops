@@ -1,3 +1,4 @@
+---
 - name: flatpak | paquete principal instalado
   become: true
   apt:

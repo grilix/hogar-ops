@@ -1,8 +1,9 @@
+---
 - name: dotfiles | repositorio clonado
   git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest_path }}"
-    update: yes
+    update: true
   notify:
     - "tmux | plugins instalados"
 

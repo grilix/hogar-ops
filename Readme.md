@@ -81,3 +81,12 @@ virtual, una vez generada por Vagrant con `vagrant up`.
 ```bash
 ansible-playbook -i inventory/vagrant.yml setup-apt-mirror.yml
 ```
+
+# Tareas
+
+Para obtener un password:
+
+```
+openssl rand -base64 32
+openssl rand -hex 32
+```

@@ -1,8 +1,9 @@
+---
 - name: vim | repositorio de Vundle clonado
   git:
     repo: "https://github.com/gmarik/Vundle.vim.git"
     dest: "{{ ansible_env.HOME }}/.vim/bundle/Vundle.vim"
-    update: no
+    update: false
 
 - name: vim | archivo de configuración existe
   stat:

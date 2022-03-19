@@ -6,6 +6,7 @@
 # Más info: /usr/share/terminfo/**/*
 #
 
+---
 - name: tmux | archivo de configuración existe
   stat:
     path: "{{ ansible_env.HOME }}/.tmux.conf"

@@ -1,2 +1,3 @@
+---
 dotfiles_repo: "https://github.com/grilix/dotfiles.git"
 dotfiles_dest_path: "{{ ansible_env.HOME }}/Source/dotfiles"
