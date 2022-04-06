@@ -1,0 +1,18 @@
+---
+version: 2
+locations:
+{% for location in backups_locations %}
+  {{ location.name }}:
+    from: {{ location.location }}
+    to: {{ location.destination }}
+    options:
+      backup:
+        exclude-larger-than: 10M
+        exclude-if-present: .restic-exclude
+        exclude-file: /var/lib/autorestic/exclude.txt
+      forget: {{ location.forget }}
+{% endfor %}
+backends:
+  s3:
+    type: s3
+    path: '{{ s3.path }}'

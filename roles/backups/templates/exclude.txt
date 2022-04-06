@@ -1,0 +1,8 @@
+*/**/logs
+*/**/GPUCache
+*/**/Code Cache
+*/**/ShaderCache
+*/**/Cache
+*/**/cache
+*/**/.cache
+*/**/__pycache__

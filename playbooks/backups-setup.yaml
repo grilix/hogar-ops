@@ -1,0 +1,9 @@
+---
+- hosts: backups
+  # tasks:
+  #   - apt:
+  #     name:
+  #       - restic
+  roles:
+    - backups
+

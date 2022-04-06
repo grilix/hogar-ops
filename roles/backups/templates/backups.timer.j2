@@ -1,0 +1,10 @@
+[Unit]
+Description=Restic backup timer for {{ item.name }}
+
+[Timer]
+OnCalendar={{ item.calendar }}
+Persistent=true
+Unit=backups@{{ item.name }}.service
+
+[Install]
+WantedBy=timers.target

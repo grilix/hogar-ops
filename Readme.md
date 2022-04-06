@@ -28,6 +28,35 @@ all:
       ansible_host: "10.0.2.15"
     flameslinger:
   children:
+    backups:
+      vars:
+        s3:
+          password: repo-password
+          access_key_id: minio-key-id
+          secret_access_key: minio-secret
+          path: 'http://minio-backups:9000/autobackups'
+      hosts:
+        bouncer:
+          backups_locations:
+            - name: config
+              location: /home/grilix/.config
+              destination: s3
+              calendar: weekly
+              forget:
+                keep-last: '3'
+                keep-monthly: '3'
+                keep-yearly: '5'
+        flameslinger:
+          backups_ssid: skylands
+          backups_locations:
+            - name: config
+              location: /home/grilix/.config
+              destination: s3
+              calendar: weekly
+              forget:
+                keep-last: '3'
+                keep-monthly: '3'
+                keep-yearly: '5'
     workstations:
       hosts:
         flameslinger:

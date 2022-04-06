@@ -1,0 +1,102 @@
+---
+- file:
+    path: files/amd64
+    state: directory
+  delegate_to: localhost
+- shell: |
+    wget \
+      https://github.com/restic/restic/releases/download/v0.13.0/restic_0.13.0_linux_amd64.bz2 \
+      -O files/amd64/restic.bz2
+    bunzip2 -d files/amd64/restic.bz2
+  args:
+    warn: false
+    creates: files/amd64/restic
+  delegate_to: localhost
+- shell: |
+    wget \
+      https://github.com/cupcakearmy/autorestic/releases/download/v1.5.8/autorestic_1.5.8_linux_amd64.bz2 \
+      -O files/amd64/autorestic.bz2
+    bunzip2 -d files/amd64/autorestic.bz2
+  args:
+    warn: false
+    creates: files/amd64/autorestic
+  delegate_to: localhost
+- name: copiar restic
+  ansible.builtin.copy:
+    src: files/amd64/restic
+    dest: /usr/local/bin/restic
+    mode: '0755'
+    owner: root
+    group: root
+    validate: "%s -v"
+  become: true
+- name: copiar autorestic
+  ansible.builtin.copy:
+    src: files/amd64/autorestic
+    dest: /usr/local/bin/autorestic
+    mode: '0755'
+    owner: root
+    group: root
+    validate: "%s -v"
+  become: true
+
+- file:
+    path: "/var/lib/autorestic"
+    state: directory
+  become: true
+
+- name: copiar configuración
+  template:
+    src: "autorestic.yaml.j2"
+    dest: "/var/lib/autorestic/.autorestic.yaml"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: copiar archivo de exclude
+  template:
+    src: "exclude.txt"
+    dest: "/var/lib/autorestic/exclude.txt"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: copiar entorno
+  template:
+    src: "env.j2"
+    dest: "/var/lib/autorestic/.env"
+    owner: root
+    group: root
+    mode: 0600
+  become: true
+
+- name: copiar servicio
+  register: backups_service
+  become: true
+  template:
+    src: "backups@.service.j2"
+    dest: "/etc/systemd/system/backups@.service"
+    mode: 0644
+    # validate: "systemd-analyze verify %s:backups@.service"
+
+- name: copiar timers
+  register: backups_timer
+  become: true
+  template:
+    src: "backups.timer.j2"
+    dest: "/etc/systemd/system/backups-{{ item.name }}.timer"
+    mode: 0644
+    # validate: "systemd-analyze verify %s:backups.timer"
+  loop: "{{ backups_locations }}"
+
+  # TODO: agregar un timer para hacer el prune cada tanto
+- name: activar los timers
+  become: true
+  systemd:
+    name: backups-{{item.name}}.timer
+    daemon_reload: true
+    enabled: true
+    state: started
+  loop: "{{ backups_locations }}"

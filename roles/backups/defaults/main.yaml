@@ -1,0 +1,9 @@
+---
+# backups_locations:
+#   - name: home
+#     location: /home/grilix
+#     destination: s3
+# s3:
+#   password: something-really-random
+#   access_key_id: ''
+#   secret_access_key: ''

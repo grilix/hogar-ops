@@ -1,0 +1,71 @@
+[Unit]
+Description=Backup service for %i
+ConditionACPower=true
+
+[Service]
+
+CapabilityBoundingSet=CAP_DAC_OVERRIDE
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH
+
+RestrictAddressFamilies=AF_INET
+RestrictAddressFamilies=AF_INET6
+LockPersonality=true
+
+PrivateMounts=true
+PrivateDevices=true
+PrivateTmp=true
+PrivateNetwork=false
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectClock=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=full
+ProtectHome=read-only
+ProtectControlGroups=true
+
+MemoryDenyWriteExecute=true
+UMask=0077
+
+SystemCallFilter=@system-service
+SystemCallFilter=~@clock
+SystemCallFilter=~@debug
+SystemCallFilter=~@module
+SystemCallFilter=~@mount
+SystemCallFilter=~@raw-io
+SystemCallFilter=~@reboot
+SystemCallFilter=~@swap
+SystemCallFilter=~@privileged
+SystemCallFilter=~@resources
+SystemCallFilter=~@cpu-emulation
+SystemCallFilter=~@obsolete
+
+RestrictNamespaces=true
+
+RestrictRealtime=true
+
+ProcSubset=pid
+RestrictSUIDSGID=true
+NoNewPrivileges=true
+DeviceAllow=
+
+Type=oneshot
+
+EnvironmentFile=/var/lib/autorestic/.env
+WorkingDirectory=/var/lib/autorestic
+
+{% if backups_ssid is defined %}
+RestrictAddressFamilies=AF_NETLINK
+
+ExecStartPre=/bin/sh -c 'iw dev wlp2s0 link | grep "SSID: {{ backups_ssid }}"'
+{% endif %}
+
+ExecStart=autorestic --ci \
+  backup -l %i
+
+ExecStart=autorestic --ci \
+  forget -l %i
+
+[Install]
+WantedBy=default.target
