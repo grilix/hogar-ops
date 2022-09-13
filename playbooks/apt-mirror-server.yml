@@ -1,0 +1,75 @@
+---
+- name: Caché para apt
+  hosts: apt_proxy
+  tasks:
+    - name: ~
+      ansible.builtin.file:
+        path: /var/cache/apt-cacher-ng
+        mode: 'go=rxw'
+
+    - name: paquetes instalados
+      become: true
+      apt:
+        # update_cache: true
+        pkg:
+          - apt-cacher-ng
+    - name: ~
+      ansible.builtin.lineinfile:
+        path: /etc/apt-cacher-ng/acng.conf
+        insertafter: '^# PassThroughPattern'
+        line: 'PassThroughPattern: ^(.*):443$'
+        # TODO: notify restart service
+    - name: ~
+      systemd:
+        name: nftables.service
+        state: stopped
+        enabled: false
+
+    - name: ~
+      systemd:
+        name: systemd-networkd.socket
+        state: stopped
+        enabled: false
+    - name: ~
+      systemd:
+        name: systemd-networkd.service
+        state: stopped
+        enabled: false
+    - name: ~
+      systemd:
+        name: systemd-resolved.service
+        state: stopped
+        enabled: false
+    - name: ~
+      systemd:
+        name: systemd-logind.service
+        masked: true
+        state: stopped
+        enabled: false
+
+    - name: ~
+      systemd:
+        name: apt-daily-upgrade.timer
+        state: stopped
+        enabled: false
+    - name: ~
+      systemd:
+        name: apt-daily.timer
+        state: stopped
+        enabled: false
+    - name: ~
+      systemd:
+        name: man-db.timer
+        state: stopped
+        enabled: false
+    # - name: ~
+    #   systemd:
+    #     name: dev-tty1.mount
+    #     state: stopped
+    #     enabled: false
+
+    # - name: ~
+    #   systemd:
+    #     name: dev-tty2.mount
+    #     state: stopped
+    #     enabled: false

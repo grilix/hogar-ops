@@ -1,0 +1,9 @@
+---
+- name: Configurar servidor apt mirror
+  hosts: apt_proxy_clients
+  tasks:
+    - name: configura acceso al proxy
+      become: true
+      template:
+        src: 00-aptproxy.j2
+        dest: /etc/apt/apt.conf.d/00-aptproxy
