@@ -12,16 +12,33 @@
   become: true
   apt:
     pkg:
-      - git
-      - vim
-      - tmux
-      - nextcloud-desktop
-      - golang
-      - docker-compose
+      - golang # esto no siempre se necesita
+      - jq
+- name: Paquetes extra instalados
+  become: true
+  apt:
+    pkg:
+      # Visor de imágenes
+      - viewnior
+      - syncthing-gtk
+      - keepassxc
+      - xfce4-whiskermenu-plugin
+      - syncthing
+  when: not workstation_headless
 
-- include: dotfiles.yml
-- include: ssh.yml
+# TODO: rename all to .yaml
+- include: updates.yaml
+- include: xdg.yml
 - include: git.yml
-- include: tmux.yml
+- include: ssh.yml
+- include: dotfiles.yml
 - include: vim.yml
+- include: tmux.yml
+- include: ipod.yml
+  when: workstation_use_ipod
 - include: flatpak.yml
+  when: workstation_use_flatpak
+- include: redshift.yaml
+  when: not workstation_headless
+- include: keyboard.yaml
+  when: not workstation_headless

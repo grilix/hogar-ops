@@ -1,0 +1,25 @@
+---
+
+# https://wiki.debian.org/UnattendedUpgrades
+#
+
+- name: "updates | paquetes instalados"
+  become: true
+  apt:
+    pkg:
+      - unattended-upgrades
+      - apt-listchanges
+- name: "updates | configuración extra"
+  become: true
+  template:
+    src: "52-unattended-upgrades-local.j2"
+    dest: "/etc/apt/apt.conf.d/52-unattended-upgrades-local"
+
+- name: "updates | activar actualizaciones"
+  become: true
+  ansible.builtin.debconf:
+    name: unattended-upgrades
+    question: unattended-upgrades/enable_auto_updates
+    value: true
+    vtype: boolean
+  notify: "updates | dpkg-reconfigure"

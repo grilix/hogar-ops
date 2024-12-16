@@ -1,0 +1,12 @@
+---
+# - name: "keyboard | caps"
+#   lineinfile:
+#     path: "/etc/default/keyboard"
+#     line: 'XKBOPTIONS="ctrl:nocaps"'
+#     regexp: '^XKBOPTIONS='
+#   become: true
+- name: "keyboard | configuración"
+  template:
+    src: "50-keyboard.conf.j2"
+    dest: "/etc/X11/xorg.conf.d/50-keyboard.conf"
+  become: true

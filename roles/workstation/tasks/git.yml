@@ -1,36 +1,26 @@
 ---
+- name: "git | paquetes instalados"
+  become: true
+  apt:
+    pkg:
+      - git
 - name: "git | editor configurado"
   git_config:
-    name: 'core.editor'
-    value: 'vim -n +1'
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
     scope: global
-
-- name: "git | modo de push configurado"
-  git_config:
-    name: push.default
-    value: simple
-    scope: global
-
-- name: "git | modo de pull configurado"
-  git_config:
-    name: pull.ff
-    value: only
-    scope: global
-
-- name: "git | colores activados"
-  git_config:
-    name: color.ui
-    value: 'true'
-    scope: global
-
-- name: "git | nombre configurado"
-  git_config:
-    name: user.name
-    value: "{{ target_user_name }}"
-    scope: global
-
-- name: "git | email configurado"
-  git_config:
-    name: user.email
-    value: "{{ target_user_email }}"
-    scope: global
+  loop:
+    - name:  core.editor
+      value: "vim -n +1"
+    - name:  push.default
+      value: simple
+    - name:  pull.ff
+      value: only
+    - name:  color.ui
+      value: "true"
+    - name:  user.name
+      value: "{{ target_user_name }}"
+    - name:  user.email
+      value: "{{ target_user_email }}"
+  loop_control:
+    label: "{{ item.name }}"

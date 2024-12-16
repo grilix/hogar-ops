@@ -1,27 +1,41 @@
 ---
-- name: vim | repositorio de Vundle clonado
+- name: "vim | paquetes instalados"
+  become: true
+  apt:
+    pkg:
+      - vim
+- name: "vim | repositorio de Vundle clonado"
   git:
     repo: "https://github.com/gmarik/Vundle.vim.git"
-    dest: "{{ ansible_env.HOME }}/.vim/bundle/Vundle.vim"
+    # FIXME: Esto tiene que ir en XDG_DATA_HOME, pero esta variable no existe por defecto
+    # Después de tener esta variable, hay que mover el directorio:
+    #   mv $XDG_CONFIG_HOME/vim/bundle $XDG_DATA_HOME/vim
+    dest: "{{ xdg_data_path }}/vim/bundle/Vundle.vim"
     update: false
 
-- name: vim | archivo de configuración existe
+- name: "vim | directorio de configuración existe"
+  file:
+    path: "{{ xdg_config_path }}/vim"
+    state: directory
+
+- name: "vim | archivo de configuración existe"
   stat:
-    path: "{{ ansible_env.HOME }}/.vim/vimrc"
+    path: "{{ xdg_config_path }}/vim/vimrc"
   register: vim_conf
 
-- name: vim | archivo de configuración creado
+- name: "vim | archivo de configuración creado"
   file:
-    path: "{{ ansible_env.HOME }}/.vim/vimrc"
+    path: "{{ xdg_config_path }}/vim/vimrc"
     state: touch
   when: not vim_conf.stat.exists
 
-- name: vim | configuración vinculada
+- name: "vim | configuración vinculada"
   lineinfile:
-    path: "{{ ansible_env.HOME }}/.vim/vimrc"
+    path: "{{ xdg_config_path }}/vim/vimrc"
     line: "source {{ dotfiles_dest_path }}/vim/vimrc"
   register: vimrc
 
-- name: vim | configuración inicial establecida
+# TODO: Esto no anda del todo bien
+- name: "vim | configuración inicial establecida"
   command: 'vim -e -c "set more" -S "{{ dotfiles_dest_path }}/vim/bootstrap.vim"'
   when: vimrc.changed

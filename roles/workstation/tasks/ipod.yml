@@ -1,0 +1,6 @@
+---
+- name: "ipod | herramientas instaladas"
+  become: true
+  apt:
+    pkg:
+      - gtkpod

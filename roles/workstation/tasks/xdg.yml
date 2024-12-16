@@ -1,0 +1,14 @@
+---
+- name: "xgd | paquetes instalados"
+  become: true
+  apt:
+    pkg:
+      - xdg-user-dirs
+- name: "xdg | directorios configurados"
+  lineinfile:
+    path: "{{ xdg_config_path }}/user-dirs.dirs"
+    line: '{{ item.key }}="{{ item.value }}"'
+    regexp: "^{{ item.key }}="
+  loop: "{{ xdg_directories | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

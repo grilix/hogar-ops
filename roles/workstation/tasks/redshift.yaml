@@ -1,0 +1,40 @@
+---
+# TODO: apparmour fix:  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=988068
+#      Edit the file /etc/apparmor.d/usr.bin.redshift and change the line
+#
+#          owner @{HOME}/.config/redshift.conf r,
+#
+#      To
+#
+#          owner @{HOME}/.config/redshift/* r,
+#
+#
+#      Then restart apparmor: sudo systemctl restart apparmor#
+
+- name: "redshift | paquete principal instalado"
+  become: true
+  apt:
+    pkg:
+      - redshift
+      - redshift-gtk
+
+# TODO: esto se podria unir con el siguiente
+- name: "redshift | directorio de configuración existe"
+  file:
+    path: "{{ xdg_config_path }}/systemd/user"
+    state: directory
+
+- name: "redshift | directorio de configuración existe"
+  file:
+    path: "{{ xdg_config_path }}/redshift"
+    state: directory
+
+- name: "redshift | configuración copiada"
+  template:
+    src: "redshift.conf"
+    dest: "{{ xdg_config_path }}/redshift/redshift.conf"
+
+- name: "redshift | servicio copiado"
+  template:
+    src: redshift.service.j2
+    dest: "{{ xdg_config_path }}/systemd/user/redshift.service"

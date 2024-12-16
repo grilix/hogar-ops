@@ -1,3 +1,19 @@
 ---
 dotfiles_repo: "https://github.com/grilix/dotfiles.git"
 dotfiles_dest_path: "{{ ansible_env.HOME }}/Source/dotfiles"
+target_user_name: "Crazy Cat"
+target_user_email: "crazy@cat.com"
+workstation_use_flatpak: false
+workstation_use_ipod: false
+workstation_headless: false
+workstation_ssh_keysize: 4096
+xdg_config_path: "{{ ansible_env.HOME }}/.config"
+xdg_data_path: "{{ ansible_env.HOME }}/.local/share"
+xdg_directories:
+  XDG_DESKTOP_DIR:     "$HOME/Desktop"
+  XDG_DOWNLOAD_DIR:    "$HOME/Downloads"
+  XDG_TEMPLATES_DIR:   "$HOME/Templates"
+  XDG_PUBLICSHARE_DIR: "$HOME/Public"
+  XDG_MUSIC_DIR:       "$HOME/Music"
+  XDG_PICTURES_DIR:    "$HOME/Picture"
+  XDG_VIDEOS_DIR:      "$HOME/Videos"

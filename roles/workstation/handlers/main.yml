@@ -1,3 +1,6 @@
 ---
-- name: tmux | plugins instalados
+- name: "tmux | plugins instalados"
   command: "{{ dotfiles_dest_path }}/tmux/tpm/bin/install_plugins"
+- name: "updates | dpkg-reconfigure"
+  become: true
+  command: "dpkg-reconfigure -f noninteractive unattended-upgrades"
